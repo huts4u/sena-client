@@ -19,7 +19,6 @@ const Login = () => {
     e.preventDefault();
 
     const config = {
-      withCredentials: true, // ✅ Ensure cookies & authentication headers are sent
       headers: {
         "Content-Type": "application/json",
       },
