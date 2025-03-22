@@ -15,42 +15,52 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const onSubmitHandler = async (e) => {
-    try {
-      e.preventDefault();
-      axios.defaults.withCredentials = true;
+  try {
+    e.preventDefault();
 
-      if (state === "Sign Up") {
-        const { data } = await axios.post(backendUrl + "/api/auth/register", {
-          name,
-          email,
-          password,
-        });
-        console.log(data);
+    const config = {
+      withCredentials: true, // ✅ Ensure cookies & authentication headers are sent
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
-        if (data.success) {
-          setIsLoggedin(true);
-          getUserData();
-          navigate("/");
-        } else {
-          toast.error(data.message);
-        }
+    if (state === "Sign Up") {
+      const { data } = await axios.post(
+        backendUrl + "/api/auth/register",
+        { name, email, password },
+        config
+      );
+
+      console.log(data);
+
+      if (data.success) {
+        setIsLoggedin(true);
+        getUserData();
+        navigate("/");
       } else {
-        const { data } = await axios.post(backendUrl + "/api/auth/login", {
-          email,
-          password,
-        });
-        if (data.success) {
-          setIsLoggedin(true);
-          getUserData();
-          navigate("/");
-        } else {
-          toast.error(data.message);
-        }
+        toast.error(data.message);
       }
-    } catch (error) {
-      toast.error(error.message);
+    } else {
+      const { data } = await axios.post(
+        backendUrl + "/api/auth/login",
+        { email, password },
+        config
+      );
+
+      if (data.success) {
+        setIsLoggedin(true);
+        getUserData();
+        navigate("/");
+      } else {
+        toast.error(data.message);
+      }
     }
-  };
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
+
   return (
     <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-b from-gray-900 to-black sm:bg-[url(https://e0.pxfuel.com/wallpapers/252/303/desktop-wallpaper-blue-space-35493.jpg)] bg-[url(https://i.pinimg.com/736x/50/38/cc/5038ccfef62ad4562fdbe66269e32bf5.jpg)] bg-cover bg-center">
       <img
